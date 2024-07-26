@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const rotCBtn = document.querySelector("#rotate-c")
     const rotCCBtn = document.querySelector("#rotate-cc")
     const downBtn = document.querySelector("#move-down")
+    const resetBtn = document.querySelector("#reset-btn")
 
     const width = 10
     let currentPos = 4
@@ -19,11 +20,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let timerId
 
     const colors = [
-        'yellow',
-        'green',
         'darkorange',
-        'lightblue',
-        'cadetblue'
+        'darkblue',
+        'cadetblue',
+        'magenta',
+        'darkseagreen'
     ]
 
     const lShape = [
@@ -66,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let random = Math.floor(Math.random()*shapes.length)
     let current = shapes[random][currentRot]
 
+    console.log(colors.length)
     function drawShape() {
         current.forEach(index => {
             squares[currentPos + index].classList.add("shapes")
@@ -107,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
             current.forEach(index => squares[currentPos + index].classList.add('end'))
             random = Math.floor(Math.random() * shapes.length)
             current = shapes[random][currentRot]
-            currentPos = 4
+            currentPos = random
             drawShape()
             ScoreNumber()
             gameOver()
@@ -165,25 +167,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 
-    leftBtn.addEventListener("click", () =>{
-        moveL()
-    })
-
-    rightBtn.addEventListener("click", () =>{
-        moveR()
-    })
-
-    downBtn.addEventListener("click", () =>{
-        moveD()
-    })
-
-    rotCBtn.addEventListener("click", () =>{
-        rotateC()
-    })
-
-    rotCCBtn.addEventListener("click", () =>{
-        rotateCC()
-    })
+    leftBtn.addEventListener("click", moveL)
+    rightBtn.addEventListener("click", moveR)
+    downBtn.addEventListener("click", moveD)
+    rotCBtn.addEventListener("click", rotateC)
+    rotCCBtn.addEventListener("click", rotateCC)
 
     function ScoreNumber() {
         for (let i = 0; i < 199; i +=width) {
@@ -210,6 +198,22 @@ document.addEventListener("DOMContentLoaded", () => {
             clearInterval(timerId)
         }
     }
+
+    function resetGame() {
+        clearInterval(timerId);
+        timerId = null;
+        score = 0;
+        ScoreNumber.innerHTML = score;
+        squares.forEach(square => {
+            square.style.backgroundColor = '';
+        });
+        currentPos = 4;
+        currentRot = 0;
+        random = Math.floor(Math.random() * shapes.length);
+        current = shapes[random][currentRot];
+    }
+
+    resetBtn.addEventListener("click", resetGame);
 })
 
 function createGridElements() {
