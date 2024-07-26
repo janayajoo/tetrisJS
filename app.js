@@ -1,6 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
     createGridElements();
 
+    /*
+    REFERENCE:
+    https://www.youtube.com/watch?v=rAUn1Lom6dw
+    https://www.youtube.com/watch?v=A6fGMwRKy7k&t=167s
+    https://parzibyte.me/blog/2020/11/02/tetris-javascript-open-source/
+    https://gist.github.com/straker/3c98304f8a6a9174efd8292800891ea1
+     */
+
     const grid = document.querySelector(".grid")
     let squares = Array.from(document.querySelectorAll(".grid div"))
     const Score = document.querySelector("#score")
@@ -65,9 +73,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const shapes = [iShape, lShape, tShape, oShape, zShape]
 
     let random = Math.floor(Math.random()*shapes.length)
+    // let randomColor = Math.floor(Math.random()*colors.length)
     let current = shapes[random][currentRot]
 
-    console.log(colors.length)
+    // console.log(colors.length)
     function drawShape() {
         current.forEach(index => {
             squares[currentPos + index].classList.add("shapes")
@@ -95,7 +104,6 @@ document.addEventListener("DOMContentLoaded", () => {
             moveD()
         }
     }
-    document.addEventListener("keyup", control)
 
     function moveD() {
         undrawShape()
@@ -119,7 +127,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function moveL() {
         undrawShape()
         const leftEdge = current.some(index => (currentPos + index) % width === 0)
-        if(!leftEdge) currentPos -=1
+        if(!leftEdge) {
+            currentPos -= 1
+        }
         if(current.some(index => squares[currentPos + index].classList.contains("end"))){
             currentPos += 1
         }
@@ -129,7 +139,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function moveR() {
         undrawShape()
         const rightEdge = current.some(index => (currentPos + index) % width === width -1)
-        if(!rightEdge) currentPos +=1
+        if(!rightEdge) {
+            currentPos += 1
+        }
         if(current.some(index => squares[currentPos + index].classList.contains('end'))) {
             currentPos -=1
         }
@@ -155,23 +167,6 @@ document.addEventListener("DOMContentLoaded", () => {
         current = shapes[random][currentRot];
         drawShape();
     }
-
-    startBtn.addEventListener("click", () =>{
-        if(timerId){
-            clearInterval(timerId)
-            timerId = null
-        } else {
-            drawShape()
-            timerId = setInterval(moveD, 1000)
-            nextRandom = Math.floor(Math.random()*shapes.length)
-        }
-    })
-
-    leftBtn.addEventListener("click", moveL)
-    rightBtn.addEventListener("click", moveR)
-    downBtn.addEventListener("click", moveD)
-    rotCBtn.addEventListener("click", rotateC)
-    rotCCBtn.addEventListener("click", rotateCC)
 
     function ScoreNumber() {
         for (let i = 0; i < 199; i +=width) {
@@ -213,7 +208,24 @@ document.addEventListener("DOMContentLoaded", () => {
         current = shapes[random][currentRot];
     }
 
+    startBtn.addEventListener("click", () =>{
+        if(timerId){
+            clearInterval(timerId)
+            timerId = null
+        } else {
+            drawShape()
+            timerId = setInterval(moveD, 1000)
+            nextRandom = Math.floor(Math.random()*shapes.length)
+        }
+    })
+
     resetBtn.addEventListener("click", resetGame);
+    document.addEventListener("keyup", control)
+    leftBtn.addEventListener("click", moveL)
+    rightBtn.addEventListener("click", moveR)
+    downBtn.addEventListener("click", moveD)
+    rotCBtn.addEventListener("click", rotateC)
+    rotCCBtn.addEventListener("click", rotateCC)
 })
 
 function createGridElements() {
